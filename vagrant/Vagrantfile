@@ -1,0 +1,60 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  config.vm.define "fedora_upstream" do |fedora_upstream|
+    fedora_upstream.vm.box = "fedora/25-cloud-base"
+    fedora_upstream.vm.provision :shell, path: "fedora_upstream_bootstrap.sh"
+    fedora_upstream.vm.provider :libvirt do |libvirt|
+      libvirt.memory = 8192
+      libvirt.cpus = 16
+    end
+  end
+
+  config.vm.define "fedora" do |fedora|
+    fedora.vm.box = "fedora/25-cloud-base"
+    fedora.vm.provision :shell, path: "fedora_bootstrap.sh"
+    fedora.vm.provider :libvirt do |libvirt|
+      libvirt.memory = 8192
+      libvirt.cpus = 16
+    end
+  end
+
+  config.vm.define "centos" do |centos|
+    centos.vm.box = "centos/7"
+    centos.vm.provision :shell, path: "centos_bootstrap.sh"
+    centos.vm.provider :libvirt do |libvirt|
+      libvirt.memory = 8192
+      libvirt.cpus = 16
+    end
+  end
+
+
+# Convert the atlas virtualbox box to use libvirt provider:
+#   dnf install qemu-img libvirt-devel rubygem-ruby-libvirt ruby-devel redhat-rpm-config
+#   vagrant plugin install vagrant-mutate
+#   vagrant box add ubuntu/trusty64
+#   vagrant mutate ubuntu/trusty64 libvirt
+#
+# ubuntu/xenial64 can't be mutated, see:
+#   https://github.com/sciurus/vagrant-mutate/issues/87
+#   https://github.com/vagrant-libvirt/vagrant-libvirt/issues/602
+#
+# Upgrade 14 to 16
+#   https://www.digitalocean.com/community/tutorials/how-to-upgrade-to-ubuntu-16-04-lts
+#
+#   sudo apt-get dist-upgrade
+#   sudo apt-get install update-manager-core
+#   sudo do-release-upgrade
+# 
+  config.vm.define "ubuntu" do |ubuntu|
+    ubuntu.vm.box = "ubuntu/trusty64"
+    ubuntu.vm.provision :shell, path: "ubuntu_bootstrap.sh"
+    ubuntu.vm.provider :libvirt do |libvirt|
+      libvirt.memory = 8192
+      libvirt.cpus = 16
+    end
+  end
+
+end

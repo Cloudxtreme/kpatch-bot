@@ -1,0 +1,17 @@
+#!/bin/bash
+
+manifest_pre=$(mktemp)
+find . | sort > $manifest_pre
+
+make -s &> /dev/null
+make clean &> /dev/null
+
+manifest_post=$(mktemp)
+find . | sort > $manifest_post
+
+diff -u $manifest_pre $manifest_post
+ret=$?
+
+rm -f $manifest_pre $manifest_post
+
+exit $ret

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SCRIPTDIR="$(readlink -f $(dirname $(type -p $0)))"
+LOGDIR="${LOGDIR:-$SCRIPTDIR/logs}"
+
+function wrapper {
+
+	echo -e "\n% make -C test/integration long"
+	make -C test/integration long || exit $?
+
+}
+
+mkdir -p $LOGDIR
+wrapper &> "$LOGDIR/long.log"

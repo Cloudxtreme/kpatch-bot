@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SCRIPTDIR="$(readlink -f $(dirname $(type -p $0)))"
+LOGDIR="${LOGDIR:-$SCRIPTDIR/logs}"
+
+function wrapper {
+
+	echo -e "\n% make -C test/integration quick"
+	make -C test/integration quick
+	ret=$?
+
+	echo -e "\n% cat test/integration/test.log  # FULL test.log"
+	cat test/integration/test.log
+
+	exit $ret
+}
+
+mkdir -p $LOGDIR
+wrapper &> "$LOGDIR/quick.log"

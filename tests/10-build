@@ -1,0 +1,20 @@
+#!/bin/bash
+
+SCRIPTDIR="$(readlink -f $(dirname $(type -p $0)))"
+LOGDIR="${LOGDIR:-$SCRIPTDIR/logs}"
+
+function wrapper {
+
+	echo -e "\n% make clean"
+	make clean || exit $?
+
+	echo -e "\n% make"
+	make || exit $?
+
+	sudo echo -e "\n% make install"
+	sudo make install || exit $?
+
+}
+
+mkdir -p $LOGDIR
+wrapper &> "$LOGDIR/build.log"

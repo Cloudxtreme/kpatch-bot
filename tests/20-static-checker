@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SCRIPTDIR="$(readlink -f $(dirname $(type -p $0)))"
+LOGDIR="${LOGDIR:-$SCRIPTDIR/logs}"
+
+function wrapper {
+
+	echo -e "\n% static-checker-script"
+	$SCRIPTDIR/static-checker-script || exit $?
+
+}
+
+mkdir -p $LOGDIR
+wrapper &> "$LOGDIR/static-checker.log"
